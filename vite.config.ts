@@ -8,21 +8,17 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        "my-lib": resolve(__dirname, "lib/main.js"),
-        "secondary": resolve(__dirname, "lib/secondary.js"),
+        number: resolve(__dirname, "src/number.ts"),
+        utils: resolve(__dirname, "src/utils.ts"),
       },
-      name: "MyLib",
+      name: "zmario",
+      formats: ["es", "cjs"],
     },
     rollupOptions: {
-      // 确保外部化处理那些
-      // 你不想打包进库的依赖
-      external: ["vue"],
+      external: ["bignumber.js", "dayjs"],
       output: {
-        // 在 UMD 构建模式下为这些外部化的依赖
-        // 提供一个全局变量
-        globals: {
-          vue: "Vue",
-        },
+        preserveModules: false,
+        exports: "named",
       },
     },
   },

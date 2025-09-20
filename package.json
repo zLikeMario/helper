@@ -1,29 +1,33 @@
 {
   "name": "zmario",
-  "private": false,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc",
+    "build": "vite build && tsc --emitDeclarationOnly --declaration --outDir dist",
     "preview": "vite preview",
     "test": "vitest"
   },
   "devDependencies": {
+    "@types/node": "^24",
     "bignumber.js": "^9.3.1",
     "dayjs": "^1.11.18",
+    "node": "^24.8.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
+    "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.2.4"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
-    "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js",
-      "require": "./dist/*.js"
+    "./number": {
+      "types": "./dist/number.d.ts",
+      "import": "./dist/number.js",
+      "require": "./dist/number.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
     }
   },
   "packageManager": "yarn@4.9.4+sha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995aa789577ffb16811da7c603dcf69e73750b",
