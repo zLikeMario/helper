@@ -159,3 +159,12 @@ export async function preventTimeout<R>(
   const timeoutPromise = new Promise<R>((_, reject) => setTimeout(() => reject(new Error(errorMessage)), duration));
   return Promise.race([cbPromise, timeoutPromise]);
 }
+
+export type ParamsWithMaybeUndefined<T extends readonly unknown[]> = { [K in keyof T]: T[K] | undefined };
+export const computeWithDefinedParams = <T extends readonly unknown[], R, StandbyR extends MaybeUndefined<R>>(
+  params: ParamsWithMaybeUndefined<T>,
+  compute: (...args: T) => R,
+  standby?: StandbyR
+): StandbyR extends undefined ? MaybeUndefined<R> : R => {
+  return params.some(isUndefined) ? (standby as R) : compute(...(params as T));
+};

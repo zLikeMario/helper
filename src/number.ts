@@ -9,11 +9,6 @@ BigNumber.config({ EXPONENTIAL_AT: 99 });
 export { BigNumber };
 export default BigNumber;
 
-// 类型定义
-export type Numberish = string | number | bigint | BigNumber;
-export type NumberString = string;
-export type MaybeUndefined<T> = T | undefined;
-
 /**
  * 判断是否为有效数字
  * @param num - 待判断的值
@@ -27,9 +22,7 @@ export function isNumber(num: any, isInt = false): boolean {
   } catch {
     return false;
   }
-  return isInt
-    ? /^-?\d+$/.test(num)
-    : /^-?\d+(\.\d+)?$/.test(num);
+  return isInt ? /^-?\d+$/.test(num) : /^-?\d+(\.\d+)?$/.test(num);
 }
 
 /**
@@ -79,11 +72,7 @@ export function readabilityNumber(num: Numberish): string {
  * @param isHiddenUnit - 是否隐藏百分号
  * @returns 百分比字符串
  */
-export function toPercentage(
-  num: Numberish,
-  precision = 2,
-  isHiddenUnit = false
-): string {
+export function toPercentage(num: Numberish, precision = 2, isHiddenUnit = false): string {
   if (!isNumber(num)) return String(num);
   const value = BigNumber(num).times(100).toFixed(precision);
   return parseFloat(value) + (isHiddenUnit ? "" : "%");
@@ -108,7 +97,9 @@ export function formatPrecision(num: Numberish, precision = 4): string {
  */
 export const readableNumber = (number: Numberish, decimals = 4): string => {
   if (!isNumber(number)) return String(number);
-  const match = BigNumber(number).toFixed().match(/(-?)(\d+)\.(0+)(\d+)/);
+  const match = BigNumber(number)
+    .toFixed()
+    .match(/(-?)(\d+)\.(0+)(\d+)/);
   if (!match) {
     return readabilityNumber(BigNumber(number).dp(decimals).toFixed());
   }
@@ -138,16 +129,7 @@ export function sumBy<T, K extends keyof T>(
   key: T[K] extends MaybeUndefined<Numberish> ? K : never
 ): NumberString;
 export function sumBy<T>(data: T[], key: (item: T) => Numberish): NumberString;
-export function sumBy<T, K extends keyof T>(
-  data: T[],
-  key: K | ((item: T) => Numberish)
-): NumberString {
-  const getValue =
-    typeof key === "function"
-      ? (item: T) => key(item)
-      : (item: T) => item?.[key as keyof T] ?? "0";
-  return data.reduce(
-    (sum, item) => sum.plus(getValue(item) as Numberish),
-    BigNumber(0)
-  ).toString();
+export function sumBy<T, K extends keyof T>(data: T[], key: K | ((item: T) => Numberish)): NumberString {
+  const getValue = typeof key === "function" ? (item: T) => key(item) : (item: T) => item?.[key as keyof T] ?? "0";
+  return data.reduce((sum, item) => sum.plus(getValue(item) as Numberish), BigNumber(0)).toString();
 }

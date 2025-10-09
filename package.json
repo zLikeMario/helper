@@ -1,12 +1,35 @@
 {
-  "name": "zmario",
-  "version": "0.0.1",
+  "name": "@zlikemario/helper",
+  "version": "0.0.2",
+  "description": "A utility library with number operations and common helper functions",
+  "keywords": [
+    "utility",
+    "number",
+    "helper",
+    "typescript"
+  ],
+  "author": "zlikemario",
+  "license": "MIT",
   "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zlikemario/helper.git"
+  },
+  "homepage": "https://github.com/zlikemario/helper#readme",
+  "bugs": {
+    "url": "https://github.com/zlikemario/helper/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc --emitDeclarationOnly --declaration --outDir dist",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "prepublishOnly": "yarn build",
+    "publish": "npm publish --access public"
   },
   "devDependencies": {
     "@types/node": "^24",
@@ -18,7 +41,15 @@
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.2.4"
   },
+  "main": "./dist/number.js",
+  "module": "./dist/number.js",
+  "types": "./dist/number.d.ts",
   "exports": {
+    ".": {
+      "types": "./dist/number.d.ts",
+      "import": "./dist/number.js",
+      "require": "./dist/number.cjs"
+    },
     "./number": {
       "types": "./dist/number.d.ts",
       "import": "./dist/number.js",
