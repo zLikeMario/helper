@@ -8,6 +8,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
+        decorator: resolve(__dirname, "src/decorator.ts"),
         number: resolve(__dirname, "src/number.ts"),
         utils: resolve(__dirname, "src/utils.ts"),
       },

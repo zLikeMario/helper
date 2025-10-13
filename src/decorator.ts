@@ -1,30 +1,30 @@
 import { isUndefined } from "./utils";
 
-export function memoize<Args extends unknown[]>(
+export function memoize<Args extends any[]>(
   duration: number = 0,
-  computeKey = (...args: Args) => args[0],
+  computeKey: ((...args: Args) => PropertyKey) | PropertyKey = (...args: Args) => args[0],
   isCacheVoid = false
 ) {
   return function <T>(
-    _: unknown,
-    _key: string,
+    _target: Object,
+    _key: string | symbol,
     descriptor: TypedPropertyDescriptor<(...args: Args) => Promise<T>>
   ): TypedPropertyDescriptor<(...args: Args) => Promise<T>> | void {
     const originalMethod = descriptor.value!;
-    const cachedData = new Map<string | symbol, MaybeUndefined<T>>();
+    const cachedData = new Map<PropertyKey, MaybeUndefined<T>>();
     let cachedTime = Date.now();
     const isExpired = () => duration > 0 && cachedTime < Date.now();
 
     descriptor.value = async function (...args: Args) {
-      const key = computeKey(...args);
-      if (!cachedData.get(key as string) || isExpired()) {
+      const key = typeof computeKey === "function" ? computeKey(...args) : computeKey;
+      if (!cachedData.get(key) || isExpired()) {
         cachedTime = Date.now() + duration;
         const v = await originalMethod.apply(this, args);
         if (isCacheVoid || !isUndefined(v)) {
-          cachedData.set(key as string, v);
+          cachedData.set(key, v);
         }
       }
-      return cachedData.get(key as string)!;
+      return cachedData.get(key)!;
     };
 
     return descriptor;
