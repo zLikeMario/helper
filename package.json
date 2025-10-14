@@ -1,6 +1,6 @@
 {
   "name": "@zlikemario/helper",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A utility library with number operations and common helper functions",
   "keywords": [
     "utility",
@@ -28,8 +28,7 @@
     "build": "vite build && tsc --emitDeclarationOnly --declaration --outDir dist",
     "preview": "vite preview",
     "test": "vitest",
-    "prepublishOnly": "yarn build",
-    "publish": "npm publish --access public"
+    "prepublishOnly": "yarn build"
   },
   "devDependencies": {
     "@types/node": "^24",

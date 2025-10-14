@@ -1,21 +1,20 @@
+/**
+ * TypeScript 5.0
+ * 新版本的装饰器写法
+ */
 import { isUndefined } from "./utils";
 
-export function memoize<Args extends any[]>(
+export function Memoize<Args extends any[]>(
   duration: number = 0,
   computeKey: ((...args: Args) => PropertyKey) | PropertyKey = (...args: Args) => args[0],
   isCacheVoid = false
 ) {
-  return function <T>(
-    _target: Object,
-    _key: string | symbol,
-    descriptor: TypedPropertyDescriptor<(...args: Args) => Promise<T>>
-  ): TypedPropertyDescriptor<(...args: Args) => Promise<T>> | void {
-    const originalMethod = descriptor.value!;
+  return function <T>(originalMethod: (...args: Args) => Promise<T>) {
     const cachedData = new Map<PropertyKey, MaybeUndefined<T>>();
     let cachedTime = Date.now();
     const isExpired = () => duration > 0 && cachedTime < Date.now();
 
-    descriptor.value = async function (...args: Args) {
+    async function replacementMethod(this: any, ...args: Args) {
       const key = typeof computeKey === "function" ? computeKey(...args) : computeKey;
       if (!cachedData.get(key) || isExpired()) {
         cachedTime = Date.now() + duration;
@@ -25,8 +24,8 @@ export function memoize<Args extends any[]>(
         }
       }
       return cachedData.get(key)!;
-    };
+    }
 
-    return descriptor;
+    return replacementMethod;
   };
 }
