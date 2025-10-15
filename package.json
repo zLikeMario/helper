@@ -1,6 +1,6 @@
 {
   "name": "@zlikemario/helper",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A utility library with number operations and common helper functions",
   "keywords": [
     "utility",
@@ -63,6 +63,11 @@
       "types": "./dist/decorator.d.ts",
       "import": "./dist/decorator.js",
       "require": "./dist/decorator.cjs"
+    },
+    "./decorator-old": {
+      "types": "./dist/decorator-old.d.ts",
+      "import": "./dist/decorator-old.js",
+      "require": "./dist/decorator-old.cjs"
     }
   },
   "packageManager": "yarn@4.9.4+sha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995aa789577ffb16811da7c603dcf69e73750b",

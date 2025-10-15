@@ -8,9 +8,10 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        decorator: resolve(__dirname, "src/decorator.ts"),
-        number: resolve(__dirname, "src/number.ts"),
-        utils: resolve(__dirname, "src/utils.ts"),
+        "decorator": resolve(__dirname, "src/decorator.ts"),
+        "decorator-old": resolve(__dirname, "src/decorator-old.ts"),
+        "number": resolve(__dirname, "src/number.ts"),
+        "utils": resolve(__dirname, "src/utils.ts"),
       },
       name: "zmario",
       formats: ["es", "cjs"],
