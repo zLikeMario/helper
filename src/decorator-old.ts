@@ -9,13 +9,14 @@ export function Memoize<Args extends any[]>(
   computeKey: ((...args: Args) => PropertyKey) | PropertyKey = (...args: Args) => args[0],
   isCacheVoid = false
 ) {
-  return function <T>(originalMethod: (...args: Args) => T, context: ClassMemberDecoratorContext) {
+  return function <T>(_: any, name: string, descriptor: TypedPropertyDescriptor<(...args: Args) => T>) {
+    const originalMethod = descriptor.value!;
     const cachedData = new Map<PropertyKey, T>();
     let cachedTime = Date.now();
-    const cacheId = Symbol(String(context.name));
+    const cacheId = Symbol(String(name));
     const isExpired = () => duration > 0 && cachedTime < Date.now();
 
-    function replacementMethod(this: any, ...args: Args) {
+    descriptor.value = function (...args: Args) {
       const key = (typeof computeKey === "function" ? computeKey(...args) : computeKey) ?? cacheId;
       if (!cachedData.get(key) || isExpired()) {
         cachedTime = Date.now() + duration;
@@ -34,8 +35,8 @@ export function Memoize<Args extends any[]>(
         }
       }
       return cachedData.get(key)!;
-    }
+    };
 
-    return replacementMethod;
+    return descriptor;
   };
 }
