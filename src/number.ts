@@ -35,7 +35,7 @@ export function isNumber(num: any, isInt = false): boolean {
 export function simplifyNumber(
   num: Numberish,
   decimal = 3,
-  rm: BigNumber.RoundingMode = BigNumber.ROUND_HALF_UP
+  rm: BigNumber.RoundingMode = BigNumber.ROUND_HALF_UP,
 ): string {
   if (!isNumber(num)) return String(num);
   const size = 1000;
@@ -115,7 +115,7 @@ export const readableNumber = (number: Numberish, decimals = 4): string => {
  * @returns 求和结果字符串
  */
 export const sum = (data: Array<Numberish>) => {
-  return data.reduce<BigNumber>((sum, item) => sum.plus(item), BigNumber(0)).toString();
+  return data.reduce<BigNumber>((sum, item) => sum.plus(item), BigNumber(0)).toString() as NumberString;
 };
 
 /**
@@ -126,10 +126,10 @@ export const sum = (data: Array<Numberish>) => {
  */
 export function sumBy<T, K extends keyof T>(
   data: T[],
-  key: T[K] extends MaybeUndefined<Numberish> ? K : never
+  key: T[K] extends MaybeUndefined<Numberish> ? K : never,
 ): NumberString;
 export function sumBy<T>(data: T[], key: (item: T) => Numberish): NumberString;
 export function sumBy<T, K extends keyof T>(data: T[], key: K | ((item: T) => Numberish)): NumberString {
   const getValue = typeof key === "function" ? (item: T) => key(item) : (item: T) => item?.[key as keyof T] ?? "0";
-  return data.reduce((sum, item) => sum.plus(getValue(item) as Numberish), BigNumber(0)).toString();
+  return data.reduce((sum, item) => sum.plus(getValue(item) as Numberish), BigNumber(0)).toString() as NumberString;
 }
