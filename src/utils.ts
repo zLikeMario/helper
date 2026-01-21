@@ -151,12 +151,15 @@ export async function preventTimeout<R>(
   callback: (() => Promise<R>) | Promise<R>,
   options?: {
     errorMessage?: string;
+    timeoutError?: any;
     timeout?: number;
   },
 ): Promise<R> {
-  const { errorMessage = "Timeout", timeout = 15000 } = options || {};
+  const { errorMessage = "Timeout", timeoutError, timeout = 15000 } = options || {};
   const cbPromise = typeof callback === "function" ? (callback as () => Promise<R>)() : callback;
-  const timeoutPromise = new Promise<R>((_, reject) => setTimeout(() => reject(new Error(errorMessage)), timeout));
+  const timeoutPromise = new Promise<R>((_, reject) =>
+    setTimeout(() => reject(timeoutError ? timeoutError : new Error(errorMessage)), timeout),
+  );
   return Promise.race([cbPromise, timeoutPromise]);
 }
 

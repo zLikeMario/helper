@@ -8,6 +8,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
+        "vue": resolve(__dirname, "src/vue/index.ts"),
+        "react": resolve(__dirname, "src/react/index.ts"),
         "decorator": resolve(__dirname, "src/decorator.ts"),
         "decorator-old": resolve(__dirname, "src/decorator-old.ts"),
         "number": resolve(__dirname, "src/number.ts"),
@@ -17,7 +19,7 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
     rollupOptions: {
-      external: ["bignumber.js", "dayjs"],
+      external: ["bignumber.js", "dayjs", "vue", "react"],
       output: {
         preserveModules: false,
         exports: "named",
