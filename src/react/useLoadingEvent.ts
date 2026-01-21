@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import useSyncedRef from "./useSyncedRef";
+import type { MaybeUndefined } from "../types";
 
 const useLoadingEvent = <Args extends any[], R extends any>(
   execute: (...args: Args) => Promise<R>,

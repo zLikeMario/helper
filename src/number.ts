@@ -2,6 +2,7 @@
  * 数字相关工具函数
  */
 import BigNumber from "bignumber.js";
+import type { Numberish, NumberString, MaybeUndefined } from "./types";
 
 // 配置 BigNumber，避免科学计数法
 BigNumber.config({ EXPONENTIAL_AT: 99 });
@@ -101,12 +102,12 @@ export const readableNumber = (number: Numberish, decimals = 4): string => {
     .toFixed()
     .match(/(-?)(\d+)\.(0+)(\d+)/);
   if (!match) {
-    return readabilityNumber(BigNumber(number).dp(decimals).toFixed());
+    return readabilityNumber(BigNumber(number).dp(decimals).toFixed() as Numberish);
   }
   const [, sign, int, zeros, nums] = match;
   return zeros.length > 3
-    ? `${sign}${readabilityNumber(int)}.0{${zeros.length}}${nums.slice(0, decimals - 2).replace(/0+$/, "")}`
-    : `${sign}${readabilityNumber(int)}.${zeros}${nums.slice(0, decimals - 2).replace(/0+$/, "")}`;
+    ? `${sign}${readabilityNumber(int as Numberish)}.0{${zeros.length}}${nums.slice(0, decimals - 2).replace(/0+$/, "")}`
+    : `${sign}${readabilityNumber(int as Numberish)}.${zeros}${nums.slice(0, decimals - 2).replace(/0+$/, "")}`;
 };
 
 /**

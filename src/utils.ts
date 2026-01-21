@@ -1,6 +1,7 @@
 /**
  * 常用操作的工具函数集合
  */
+import type { MaybeUndefined } from "./types";
 
 /**
  * 延迟指定的时间间隔（毫秒）
@@ -125,14 +126,14 @@ export function isEmail(text: string): boolean {
  * @param p - 要执行的 Promise
  * @param catchFn - 可选的错误处理函数
  */
-export const tryCatchAsync = async <T, F extends ((error: unknown) => any) | undefined = undefined>(
+export const tryCatchAsync = async <T, FR = any, F extends ((error: unknown) => FR) | undefined = undefined>(
   p: Promise<T>,
   catchFn?: F,
-): Promise<T | (F extends (...args: any) => any ? ReturnType<F> : undefined)> => {
+): Promise<T | (F extends Function ? FR : undefined)> => {
   try {
     return await p;
   } catch (error) {
-    return catchFn?.(error);
+    return catchFn?.(error) as F extends Function ? FR : undefined;
   }
 };
 

@@ -1,8 +1,10 @@
 export {};
 
 declare global {
-  type NumberString = `${number}` | `${number}.${number}`;
-  type Numberish = NumberString | string | bigint;
+  type IntString = `${number}`;
+  type DecimalsString = `${number}.${number}`;
+  type NumberString = IntString | DecimalsString;
+  type Numberish = NumberString | number | bigint;
 
   type MaybeNull<T> = T | null;
   type MaybeUndefined<T> = T | undefined;

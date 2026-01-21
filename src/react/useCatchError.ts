@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { preventTimeout } from "../utils";
 import useSyncedRef from "./useSyncedRef";
+import type { MaybePromise, MaybeUndefined } from "../types";
 
 const useCatchError = <Args extends any[], R, IsThrowError extends boolean = false>(
   execute: (...args: Args) => MaybePromise<R>,
