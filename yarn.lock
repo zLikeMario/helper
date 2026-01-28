@@ -940,9 +940,6 @@ __metadata:
     vite-plugin-dts: "npm:^4.5.4"
     vitest: "npm:^3.2.4"
     vue: "npm:^3.5.27"
-  peerDependencies:
-    bignumber.js: "*"
-    dayjs: "*"
   languageName: unknown
   linkType: soft
 
