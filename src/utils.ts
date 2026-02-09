@@ -153,15 +153,23 @@ export async function preventTimeout<R>(
   options?: {
     errorMessage?: string;
     timeoutError?: any;
-    timeout?: number;
+    timeout?: number; // <=0 代表不会超时
   },
 ): Promise<R> {
   const { errorMessage = "Timeout", timeoutError, timeout = 15000 } = options || {};
   const cbPromise = typeof callback === "function" ? (callback as () => Promise<R>)() : callback;
-  const timeoutPromise = new Promise<R>((_, reject) =>
-    setTimeout(() => reject(timeoutError ? timeoutError : new Error(errorMessage)), timeout),
-  );
-  return Promise.race([cbPromise, timeoutPromise]);
+  const timeoutPromise =
+    timeout > 0
+      ? new Promise<R>((_, reject) =>
+          setTimeout(() => reject(timeoutError ? timeoutError : new Error(errorMessage)), timeout),
+        )
+      : null;
+
+  try {
+    return Promise.race(timeoutPromise ? [cbPromise, timeoutPromise] : [cbPromise]);
+  } catch (error) {
+    throw error;
+  }
 }
 
 export type ParamsWithMaybeUndefined<T extends readonly unknown[]> = { [K in keyof T]: T[K] | undefined };

@@ -1,6 +1,15 @@
 import { computed, ref, type ComputedRef } from "vue";
 import type { MaybeUndefined } from "../types";
 
+/**
+ * 包装异步执行函数，返回带 loading 状态的调用器。
+ *
+ * 用法：
+ * const [run, isLoading] = useLoadingEvent(exec, { isAllowMulticall });
+ *
+ * - 默认不允许并发，重复调用会复用上一次 Promise
+ * - 可通过 isAllowMulticall 允许并发调用
+ */
 const useLoadingEvent = <Args extends any[], R extends any>(
   execute: (...args: Args) => Promise<R>,
   options?: Partial<{
@@ -23,11 +32,13 @@ const useLoadingEvent = <Args extends any[], R extends any>(
 
   return [
     async (...args: Args) => {
+      // 默认复用进行中的请求，避免重复触发。
       if (isLoading.value && resolvePromise && !_options.isAllowMulticall) return resolvePromise;
 
       isLoading.value = true;
       const executeId = (currentExecuteId += 1);
 
+      // 仅在最新请求完成时关闭 loading。
       resolvePromise = execute(...args).finally(() => {
         const isLatestPromise = executeId === currentExecuteId;
         if (isLatestPromise) {
