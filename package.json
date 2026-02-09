@@ -1,6 +1,6 @@
 {
   "name": "@zlikemario/helper",
-  "version": "0.0.16",
+  "version": "1.0.0",
   "description": "A utility library with number operations and common helper functions",
   "keywords": [
     "utility",
