@@ -8,8 +8,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        "vue": resolve(__dirname, "src/vue/index.ts"),
-        "react": resolve(__dirname, "src/react/index.ts"),
+        "vue": resolve(__dirname, "src/vue.ts"),
+        "react": resolve(__dirname, "src/react.ts"),
         "decorator": resolve(__dirname, "src/decorator.ts"),
         "decorator-old": resolve(__dirname, "src/decorator-old.ts"),
         "number": resolve(__dirname, "src/number.ts"),
