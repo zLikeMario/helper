@@ -1,6 +1,6 @@
 {
   "name": "@zlikemario/helper",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A utility library with number operations and common helper functions",
   "keywords": [
     "utility",
@@ -88,7 +88,6 @@
   },
   "packageManager": "yarn@4.9.4+sha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995aa789577ffb16811da7c603dcf69e73750b",
   "dependencies": {
-    "bignumber.js": "^9.3.1",
-    "dayjs": "^1.11.18"
+    "bignumber.js": "^9.3.1"
   }
 }

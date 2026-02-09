@@ -19,7 +19,7 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
     rollupOptions: {
-      external: ["bignumber.js", "dayjs", "vue", "react"],
+      external: ["bignumber.js", "vue", "react"],
       output: {
         preserveModules: false,
         exports: "named",
