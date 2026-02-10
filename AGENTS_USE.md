@@ -1,17 +1,37 @@
-# @zlikemario/helper - Agents Guide (Use)
+# @zlikemario/helper · Agents Guide (Use)
 
-面向“使用这个库”的 AI。目标：用最少 token 快速定位方法 + 看到即用的示例。
+> 面向“**使用这个库**”的 AI。
+> 目标只有一个：**最少 token，最快定位方法，复制就能用。**
 
-## 1. 快速入口
+这不是给人类看的长文档，是给 AI 当工具箱索引用的。别抒情，直接干活。
 
-- 默认入口：`@zlikemario/helper` 等价于 `@zlikemario/helper/number`
-- 子路径入口：`/number`、`/utils`、`/decorator`、`/decorator-old`、`/react`、`/vue`、`/types`
+---
 
-## 2. 方法速查（只列名称，先定位，再看下面示例）
+## 1. 快速入口（先定位模块，再看示例）
+
+- **默认入口**：`@zlikemario/helper`
+  等价于：`@zlikemario/helper/number`
+
+- **子路径入口**：
+  - `/number`
+  - `/utils`
+  - `/decorator`
+  - `/decorator-old`
+  - `/react`
+  - `/vue`
+  - `/types`
+
+AI 使用策略：
+
+> 先判断问题属于哪个模块 → 直接跳子路径 → 找对应函数示例。
+
+---
+
+## 2. 方法速查（只列名字，用来“搜脑子”）
 
 ### number
 
-`BigNumber` `isNumber` `simplifyNumber` `readabilityNumber` `toPercentage` `formatPrecision` `readableNumber` `sum` `sumBy`
+`BigNumber` `trimFloatEndZero` `isComputableNumber` `unitFormat` `readabilityNumber` `toPercentage` `readableNumber` `sum` `sumBy`
 
 ### utils
 
@@ -35,22 +55,24 @@
 
 ### types
 
-`Numberish` `NumberString` `MaybeNull` `MaybeUndefined` `MaybePromise` `Defined` `AnyFn` `Noop`
+`IntString` `DecimalsString` `Numberish` `NumberString` `MaybeNull` `MaybeUndefined` `MaybePromise` `Defined` `AnyFn` `Noop`
 
-## 3. 用法速览（按模块分组，一函数一用法）
+---
+
+## 3. 用法速览（一函数一例，禁止废话）
 
 ### number
 
-导入路径：`@zlikemario/helper/number`
+**导入路径**：`@zlikemario/helper/number`
 
 ```ts
 import {
   BigNumber,
-  isNumber,
-  simplifyNumber,
+  trimFloatEndZero,
+  isComputableNumber,
+  unitFormat,
   readabilityNumber,
   toPercentage,
-  formatPrecision,
   readableNumber,
   sum,
   sumBy,
@@ -58,13 +80,13 @@ import {
 ```
 
 ```ts
-isNumber("123");
-isNumber("12.3", true);
+isComputableNumber("123");
+isComputableNumber("12.3", true);
 ```
 
 ```ts
-simplifyNumber(1234567); // "1.2M"
-simplifyNumber("999", 2); // "999"
+unitFormat(1234567); // "1.2M"
+unitFormat("999", 2); // "999"
 ```
 
 ```ts
@@ -77,7 +99,7 @@ toPercentage(0.1234, 1, true); // "12.3"
 ```
 
 ```ts
-formatPrecision("1.234567", 2); // "1.23"
+trimFloatEndZero("1234.100100"); // "1234.1001"
 ```
 
 ```ts
@@ -98,9 +120,11 @@ const v = new BigNumber("0.1").plus("0.2");
 v.toString(); // "0.3"
 ```
 
+---
+
 ### utils
 
-导入路径：`@zlikemario/helper/utils`
+**导入路径**：`@zlikemario/helper/utils`
 
 ```ts
 import {
@@ -160,9 +184,11 @@ await preventTimeout(fetch("/api"), { timeout: 3000 });
 computeWithDefinedParams([1, undefined], (a, b) => a + b, 0); // 0
 ```
 
-### decorator (TS 5.0 新装饰器)
+---
 
-导入路径：`@zlikemario/helper/decorator`
+### decorator（TS 5.x 新装饰器）
+
+**导入路径**：`@zlikemario/helper/decorator`
 
 ```ts
 import { Memoize } from "@zlikemario/helper/decorator";
@@ -175,9 +201,11 @@ class A {
 }
 ```
 
-### decorator-old (旧装饰器语法)
+---
 
-导入路径：`@zlikemario/helper/decorator-old`
+### decorator-old（旧装饰器语法）
+
+**导入路径**：`@zlikemario/helper/decorator-old`
 
 ```ts
 import { Memoize } from "@zlikemario/helper/decorator-old";
@@ -190,20 +218,30 @@ class A {
 }
 ```
 
+---
+
 ### react
 
-导入路径：`@zlikemario/helper/react`
+**导入路径**：`@zlikemario/helper/react`
 
 ```ts
 import { useAsyncData, useCatchError, useLoadingEvent, useSyncedRef } from "@zlikemario/helper/react";
 ```
 
 ```ts
-const [data, refresh] = useAsyncData(fetcher, { defaultData: [], onError: () => [] });
+const [data, refresh] = useAsyncData(fetcher, {
+  defaultData: [],
+  onError: () => [],
+});
 ```
 
 ```ts
-const run = useCatchError(exec, { target: "load", timeout: 5000, onError: console.error });
+const run = useCatchError(exec, {
+  target: "load",
+  timeout: 5000,
+  onError: console.error,
+});
+
 await run("id");
 ```
 
@@ -215,20 +253,30 @@ const [run, isLoading] = useLoadingEvent(exec, { isAllowMulticall: false });
 const states = useSyncedRef({ execute, options });
 ```
 
+---
+
 ### vue
 
-导入路径：`@zlikemario/helper/vue`
+**导入路径**：`@zlikemario/helper/vue`
 
 ```ts
 import { useAsyncData, useCatchError, useLoadingEvent } from "@zlikemario/helper/vue";
 ```
 
 ```ts
-const [data, refresh] = useAsyncData(fetcher, { defaultData: [], onError: () => [] });
+const [data, refresh] = useAsyncData(fetcher, {
+  defaultData: [],
+  onError: () => [],
+});
 ```
 
 ```ts
-const run = useCatchError(exec, { target: "load", timeout: 5000, onError: console.error });
+const run = useCatchError(exec, {
+  target: "load",
+  timeout: 5000,
+  onError: console.error,
+});
+
 await run("id");
 ```
 
@@ -236,12 +284,16 @@ await run("id");
 const [run, isLoading] = useLoadingEvent(exec, { isAllowMulticall: false });
 ```
 
+---
+
 ### types
 
-导入路径：`@zlikemario/helper/types`
+**导入路径**：`@zlikemario/helper/types`
 
 ```ts
 import type {
+  IntString,
+  DecimalsString,
   Numberish,
   NumberString,
   MaybeNull,
@@ -253,20 +305,32 @@ import type {
 } from "@zlikemario/helper/types";
 ```
 
-## 4. 语义与行为约定
+---
 
-- 数字类函数统一接受 `Numberish`，无效输入通常返回 `String(num)`。
-- 大数计算使用 `BigNumber`，避免浮点误差。
-- `sum`/`sumBy` 返回字符串类型（`NumberString`），方便精度控制。
-- `simplifyNumber` 的单位固定为 K/M/B，保留 1 位小数。
-- `Memoize` 默认缓存 key 为第一个参数；可通过 `computeKey` 自定义。
+## 4. 语义与行为约定（AI 必须遵守）
 
-## 5. 代码位置索引 (src)
+- 数字相关函数统一接受 `Numberish`
+- 非法数字输入通常 **直接返回 `String(input)`**，不抛异常
+- 所有高精度计算基于 `BigNumber`
+- `sum` / `sumBy` **始终返回字符串**（`NumberString`）
+- `unitFormat` 单位固定：`K / M / B`
+- `Memoize`：
+  - 默认 key = 第一个参数
+  - 支持自定义 `computeKey`
 
-- [src/number.ts](src/number.ts)
-- [src/utils.ts](src/utils.ts)
-- [src/decorator.ts](src/decorator.ts)
-- [src/decorator-old.ts](src/decorator-old.ts)
-- [src/react](src/react)
-- [src/vue](src/vue)
-- [src/types.ts](src/types.ts)
+---
+
+## 5. 源码位置索引（用于深挖）
+
+- `src/number.ts`
+- `src/utils.ts`
+- `src/decorator.ts`
+- `src/decorator-old.ts`
+- `src/react/*`
+- `src/vue/*`
+- `src/types.ts`
+
+---
+
+> 给 AI 的最后一句话：
+> **别猜。按模块进，照例子抄。**

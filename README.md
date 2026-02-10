@@ -17,13 +17,13 @@ pnpm add @zlikemario/helper
 ### Number Operations
 
 ```typescript
-import { BigNumber, isNumber, simplifyNumber } from '@zlikemario/helper/number'
+import { BigNumber, isComputableNumber, unitFormat } from '@zlikemario/helper/number'
 
 // Check if a value is a number
-console.log(isNumber('123')) // true
+console.log(isComputableNumber('123')) // true
 
 // Simplify large numbers
-console.log(simplifyNumber(1234567)) // "1.2M"
+console.log(unitFormat(1234567)) // "1.2M"
 
 // Use BigNumber for precise calculations
 const result = new BigNumber('0.1').plus('0.2')
@@ -50,11 +50,11 @@ console.log(isEmail('user@example.com')) // true
 ### Number Module (`@zlikemario/helper/number`)
 
 - `BigNumber` - BigNumber.js instance for precise calculations
-- `isNumber(num, isInt?)` - Check if value is a number
-- `simplifyNumber(num, decimal?, rm?)` - Simplify large numbers (1.2K, 3.4M)
+- `trimFloatEndZero(num)` - Remove trailing zeros from decimal strings
+- `isComputableNumber(num, isInt?)` - Check if value is a computable number
+- `unitFormat(num, decimals?, rm?)` - Simplify large numbers (1.2K, 3.4M)
 - `readabilityNumber(num)` - Add thousand separators
 - `toPercentage(num, precision?, isHiddenUnit?)` - Convert to percentage
-- `formatPrecision(num, precision?)` - Format with specific precision
 - `readableNumber(num, decimals?)` - Advanced readable formatting
 - `sum(data)` - Sum array of numbers
 - `sumBy(data, key)` - Sum by object property or function

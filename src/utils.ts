@@ -1,7 +1,7 @@
 /**
  * 常用操作的工具函数集合
  */
-import type { MaybeUndefined } from "./types";
+import type { MaybePromise, MaybeUndefined } from "./types";
 
 /**
  * 延迟指定的时间间隔（毫秒）
@@ -123,15 +123,15 @@ export function isEmail(text: string): boolean {
 
 /**
  * 异步 try-catch 包装器
- * @param p - 要执行的 Promise
+ * @param p - 要执行的 Promise ｜ (() => any)
  * @param catchFn - 可选的错误处理函数
  */
 export const tryCatchAsync = async <T, FR = any, F extends ((error: unknown) => FR) | undefined = undefined>(
-  p: Promise<T>,
+  p: (() => MaybePromise<T>) | MaybePromise<T>,
   catchFn?: F,
 ): Promise<T | (F extends Function ? FR : undefined)> => {
   try {
-    return await p;
+    return await (typeof p === 'function' ? (p as (() => MaybePromise<T>))() : p);
   } catch (error) {
     return catchFn?.(error) as F extends Function ? FR : undefined;
   }
@@ -161,8 +161,8 @@ export async function preventTimeout<R>(
   const timeoutPromise =
     timeout > 0
       ? new Promise<R>((_, reject) =>
-          setTimeout(() => reject(timeoutError ? timeoutError : new Error(errorMessage)), timeout),
-        )
+        setTimeout(() => reject(timeoutError ? timeoutError : new Error(errorMessage)), timeout),
+      )
       : null;
 
   try {
