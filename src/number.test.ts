@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { readableNumber, isNumber, simplifyNumber, BigNumber } from "./number";
+import { readableNumber, isComputableNumber, unitFormat, BigNumber } from "./number";
 
 describe("number.ts", () => {
   const valueAndExpect = [
@@ -18,27 +18,28 @@ describe("number.ts", () => {
   ];
   valueAndExpect.forEach(([v, r]) => {
     test(`readableNumber: ${v} => ${r}`, () => {
-      expect(readableNumber(v)).toBe(r);
+      expect(readableNumber(v as any)).toBe(r);
     });
   });
 
-  test("isNumber: 正常数字", () => {
-    expect(isNumber("123")).toBe(true);
-    expect(isNumber(123)).toBe(true);
-    expect(isNumber("-123.45")).toBe(true);
-    expect(isNumber("abc")).toBe(false);
-    expect(isNumber(undefined)).toBe(false);
-    expect(isNumber("123", true)).toBe(true);
-    expect(isNumber("123.45", true)).toBe(false);
+  test("isComputableNumber: 正常数字", () => {
+    expect(isComputableNumber("123")).toBe(true);
+    expect(isComputableNumber(123)).toBe(true);
+    expect(isComputableNumber("-123.45")).toBe(true);
+    expect(isComputableNumber("abc")).toBe(false);
+    expect(isComputableNumber(undefined)).toBe(false);
+    expect(isComputableNumber("123", true)).toBe(true);
+    expect(isComputableNumber("123.45", true)).toBe(false);
   });
 
-  test("simplifyNumber: 千分位和单位", () => {
-    expect(simplifyNumber(1234)).toMatch(/K$/);
-    expect(simplifyNumber(-1234)).toMatch(/K$/);
-    expect(simplifyNumber(1000000)).toMatch(/M$/);
-    expect(simplifyNumber("abc")).toBe("abc");
+  test("unitFormat: 千分位和单位", () => {
+    expect(unitFormat(1234)).toMatch(/K$/);
+    expect(unitFormat(-1234)).toMatch(/K$/);
+    expect(unitFormat(1000000)).toMatch(/M$/);
+    expect(unitFormat("abc" as any)).toBe("abc");
+    expect(unitFormat("999.999")).toBe("999.999");
     // @ts-expect-error 测试传入 undefined
-    expect(simplifyNumber(undefined)).toBe("undefined");
+    expect(unitFormat(undefined)).toBe("undefined");
   });
 
   test("BigNumber 导出", () => {

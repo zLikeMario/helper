@@ -11,37 +11,60 @@ export { BigNumber };
 export default BigNumber;
 
 /**
+ * 删除结尾不该出现的 0
+ * @returns {string}
+ * @eg [
+ *   1234.0000        =>  1234
+ *   1234.00001       =>  1234.00001
+ *   1234.100100      =>  1234.1001
+ *   1234.            =>  1234
+ * ]
+ */
+export function trimFloatEndZero(num: Numberish) {
+  const raw = String(num);
+
+  // 不处理指数形式
+  if (!raw.includes(".") || /e/i.test(raw)) return raw;
+
+  const trimmed = raw.replace(/(\.\d*?)0+$/, "$1");
+  return trimmed.endsWith(".") ? trimmed.slice(0, -1) : trimmed;
+}
+
+/**
  * 判断是否为有效数字
  * @param num - 待判断的值
  * @param isInt - 是否要求为整数
  * @returns 是否为数字
+ * 
+ * false：Infinity, -Infinity, NaN
+ * true： "1e10000"（非常大但有限）
  */
-export function isNumber(num: any, isInt = false): boolean {
-  if (!["string", "number", "bigint"].includes(typeof num)) return false;
+export function isComputableNumber(num: unknown, isInt = false): boolean {
+  if (typeof num === "object" && num !== null) return false;
   try {
-    num = BigNumber(num).toFixed();
+    const bn = BigNumber(num as any);
+    return isInt ? bn.isInteger() : bn.isFinite();
   } catch {
     return false;
   }
-  return isInt ? /^-?\d+$/.test(num) : /^-?\d+(\.\d+)?$/.test(num);
 }
 
 /**
  * 数字简化显示（如 1.2K, 3.4M）
  * @param num - 数字
- * @param decimal - 保留小数位
+ * @param decimals - 保留小数位
  * @param rm - 舍入模式
  * @returns 简化后的字符串
  */
-export function simplifyNumber(
+export function unitFormat(
   num: Numberish,
-  decimal = 3,
+  decimals = 3,
   rm: BigNumber.RoundingMode = BigNumber.ROUND_HALF_UP,
 ): string {
-  if (!isNumber(num)) return String(num);
+  if (!isComputableNumber(num)) return String(num);
   const size = 1000;
   let bignumber = BigNumber(num);
-  if (bignumber.abs().lt(size)) return bignumber.toFixed(decimal, rm).replace(/\.0+$/, "");
+  if (bignumber.abs().lt(size)) return trimFloatEndZero(bignumber.toFixed(decimals, rm) as Numberish);
 
   const unit = ["", "K", "M", "B"];
   let i = 0;
@@ -49,7 +72,7 @@ export function simplifyNumber(
     bignumber = bignumber.div(size);
     if (bignumber.abs().lt(size)) break;
   }
-  return bignumber.toFixed(1, rm) + unit[i];
+  return trimFloatEndZero(bignumber.toFixed(1, rm) as Numberish) + unit[i];
 }
 
 /**
@@ -58,7 +81,7 @@ export function simplifyNumber(
  * @returns 格式化后的字符串
  */
 export function readabilityNumber(num: Numberish): string {
-  if (!isNumber(num)) return String(num);
+  if (!isComputableNumber(num)) return String(num);
   return BigNumber(num).toFormat({
     decimalSeparator: ".",
     groupSeparator: ",",
@@ -74,20 +97,9 @@ export function readabilityNumber(num: Numberish): string {
  * @returns 百分比字符串
  */
 export function toPercentage(num: Numberish, precision = 2, isHiddenUnit = false): string {
-  if (!isNumber(num)) return String(num);
+  if (!isComputableNumber(num)) return String(num);
   const value = BigNumber(num).times(100).toFixed(precision);
   return parseFloat(value) + (isHiddenUnit ? "" : "%");
-}
-
-/**
- * 保留指定精度
- * @param num - 数字
- * @param precision - 保留小数位
- * @returns 格式化后的字符串
- */
-export function formatPrecision(num: Numberish, precision = 4): string {
-  if (!isNumber(num)) return String(num);
-  return BigNumber(num).dp(precision).toString();
 }
 
 /**
@@ -97,7 +109,7 @@ export function formatPrecision(num: Numberish, precision = 4): string {
  * @returns 格式化后的字符串
  */
 export const readableNumber = (number: Numberish, decimals = 4): string => {
-  if (!isNumber(number)) return String(number);
+  if (!isComputableNumber(number)) return String(number);
   const match = BigNumber(number)
     .toFixed()
     .match(/(-?)(\d+)\.(0+)(\d+)/);
