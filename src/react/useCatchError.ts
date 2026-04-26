@@ -21,6 +21,7 @@ const useCatchError = <Args extends any[], R, IsThrowError extends boolean = fal
     timeoutError: any; // 超时后抛出的错误，默认是 new Error(`${target} Timeout of ${timeout}ms exceeded`)
     isThrowError: IsThrowError; // 是否在报错后继续 throw 错误
     onError: (error: unknown, target: MaybeUndefined<string>, ...args: Args) => any;
+    onFinally: (target: MaybeUndefined<string>, ...args: Args) => any;
   }>,
 ) => {
   const timeout = options?.timeout ?? 20000;
@@ -53,6 +54,8 @@ const useCatchError = <Args extends any[], R, IsThrowError extends boolean = fal
       }
 
       return void 0 as IsThrowError extends true ? never : undefined;
+    } finally {
+      states.current.options.onFinally?.(states.current.options.target, ...args);
     }
   }, []);
 };
